@@ -1,0 +1,23 @@
+body {
+    font-family: Serif;
+}
+span {
+    font-weight: bold;
+}
+table {
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+thead, tbody {
+    border-bottom: 1px dashed #ccc;
+}
+th {
+    font-size: 30px;
+}
+thead td {
+    color: gray;
+    font-size: 12px;
+}
+td {
+    padding: 10px;
+}
