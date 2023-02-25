@@ -1,0 +1,172 @@
+<title>영수증</title>
+
+{% load humanize %}
+
+
+<style>
+    body {
+        font-family: Serif;
+    }
+
+    .mainBody {
+        display: flex;
+        margin: 0 auto;
+        position: absolute;
+        width: 1000px;
+    }
+    span {
+        font-weight: bold;
+    }
+    table {
+        border-spacing: 0;
+        border-collapse: collapse;
+    }
+    thead, tbody {
+        border-bottom: 1px dashed #ccc;
+    }
+    th {
+        font-size: 30px;
+    }
+    thead td {
+        color: gray;
+        font-size: 12px;
+    }
+    td {
+        padding: 10px;
+    }
+    tbody tr:nth-of-type(1) td, tfoot td:nth-of-type(1) {
+        font-weight: bold;
+        text-align: center;
+    }
+
+
+    tbody tr:nth-of-type(n + 2) td {
+        {#font-size: 13px;#}
+        color: gray;
+        text-align: center;
+    }
+
+    tbody td:nth-of-type(1) {
+        {#font-size: 19px;#}
+        {#text-align: center;#}
+        width: 100px;
+    }
+
+    tbody td:nth-of-type(2) {
+        min-width: 120px;
+        max-width: 200px;
+    }
+    td:last-child {
+        text-align: right;
+    }
+
+    .peopleList {
+        border-radius: 5px;
+        border: 1px solid #ccc;
+        height: 100%;
+        padding: 3px 10px 30px 10px;
+        margin-left: 50px;
+        margin-top: 30px;
+    }
+
+    .peopleList li {
+        margin-left: 5px;
+    }
+    .peopleList p {
+        text-align: right;
+        color: gray;
+    }
+    .unusedMoney {
+        color: blue;
+    }
+    .usedMoney {
+        color: red;
+    }
+</style>
+
+{% block content %}
+<div class="mainBody">
+    <table>
+        <thead>
+            <tr>
+                <th colspan="4">{{ meetingTitle }}</th>
+            </tr>
+            <tr>
+                <td colspan="4"><br> 단위 : {{ monetaryUnit }}</td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr style="border-bottom: 1px dashed #ccc">
+                <td>이용처</td>
+                <td>설명</td>
+                <td>금액</td>
+            </tr>
+        {% for receiptInfo in receiptInfoList %}
+            <tr>
+                <td><span>{{  receiptInfo.store }}</span></td>
+                <td><span>{{  receiptInfo.content }}</span></td>
+                <td>{{  receiptInfo.amount }} x {{  receiptInfo.price|intcomma }}</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+        <tfoot>
+        {%  for unusedMoney in unusedMoneyList %}
+            <tr>
+                <td>{{ unusedMoney.title }}</td>
+                <td>{{ unusedMoney.description }}</td>
+                <td class = "unusedMoney">{{  unusedMoney.amount|intcomma }}</td>
+            </tr>
+        {% endfor %}
+        {%  for usedMoney in usedMoneyList %}
+            <tr>
+                <td>{{ usedMoney.title }}</td>
+                <td>{{ usedMoney.description }}</td>
+                <td class = "usedMoney">-{{ usedMoney.amount|intcomma }}</td>
+            </tr>
+        {% endfor %}
+        <tr style="border-top: 1px dashed #ccc">
+            <td>남은 금액</td>
+            <td colspan="2" id = 'finalPrice'></td>
+        </tr>
+        </tfoot>
+    </table>
+    <div class="peopleList">
+        <p>{{ meetingDate }}</p>
+        <h3>참여 인원 ({{ participantList|length }}명)</h3>
+
+        {%  for participant in participantList %}
+            <li>{{ participant }}</li>
+        {% endfor %}
+
+        <h3>미 참여 인원 ({{ nonParticipantList|length }}명)</h3>
+
+        {%  for nonParticipant in nonParticipantList %}
+            <li>{{ nonParticipant }}</li>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+
+<script>
+    window.onload = () => {
+        document.getElementById('finalPrice').innerHTML = writeComma(remainMoney())
+    }
+    const remainMoney = () => {
+        let remainMoney = 0;
+        for(let unusedMoney of document.getElementsByClassName('unusedMoney')) {
+            remainMoney += Number(unusedMoney.innerHTML.replace(/\,/g, ''));
+        }
+        for(let usedMoney of document.getElementsByClassName('usedMoney')) {
+            remainMoney -= Number(usedMoney.innerHTML.replace(/\-|,/g, ''));
+        }
+        return remainMoney;
+    }
+
+    const writeComma = (money) => {
+        if(money instanceof String == false) {
+            money = String(money)
+        }
+        return money.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+    }
+
+</script>
