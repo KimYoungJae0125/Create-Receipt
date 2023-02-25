@@ -1,62 +1,58 @@
-{% block title %}{{ test }}{% endblock %}
+<title>영수증 만들기</title>
 
-<!--{% load static %}-->
-<!--<link href="{% static 'css/styles.css' %}" rel="stylesheet" />-->
+{% load static %}
+<link href="{% static 'css/base.css' %}" rel="stylesheet" />
+
 <style>
-    #receiptBody {
-        margin-top: 10px;
-        border-top: 1px solid #ccc;
-    }
-    .receiptInfo {
-        margin-top: 10px;
-    }
-    input {
-        margin-left: 5px;
-        border-radius: 5px;
-    }
-    div > span:nth-of-type(2) {
-        margin-left: 50px;
+    table td:nth-of-type(1) {
+        width: 30px
     }
 </style>
 
 {% block content %}
-<div id ='navbarResponsive'>
-    <h1>test</h1>
-</div>
+<table>
+    <thead>
+        <tr>
+            <th colspan="6">영수증 만들기</th>
+        </tr>
+        <tr>
+            <td colspan="6"><button onclick="addReceiptInfo()">행 추가</button> </td>
+        </tr>
+    </thead>
+    <tbody id = 'receiptBody'>
+    <tr style="text-align: center">
+        <td></td>
+        <td>이용 날짜</td>
+        <td>이용처</td>
+        <td>내용</td>
+        <td>금액</td>
+        <td>개수</td>
+    </tr>
 
-<div>
-    <div>
-        <span>매장</span>
-        <input />
-        <span>날짜</span>
-        <input type="date" />
-    </div>
-    <div id = 'receiptBody'>
-        <button onclick="addReceiptInfo()">행 추가</button>
-    </div>
-    <div>
-        <button style="margin-top: 10px">영수증 생성</button>
-    </div>
-</div>
-<!--{% for todo in todolist %}-->
-<!--<div>-->
-<!--    <span> {{ todo.content }} </span>-->
-<!--    <span> {{ todo.flag }} </span>-->
-<!--</div>-->
-<!--{% endfor %}-->
+    </tbody>
+    <tfoot>
+        <tr>
+            <td colspan="6">
+                <button>영수증 생성</button>
+            </td>
+        </tr>
+    </tfoot>
+</table>
 {% endblock %}
 
 <!--<script src="{% static 'js/scripts.js'%}"></script>-->
 
 <script>
     const addReceiptInfo = () => {
-        const temp = document.createElement("div");
+        const temp = document.createElement("tr");
         temp.classList.add('receiptInfo')
         const htmlInfo = [];
-        htmlInfo.push(`<span>내용</span>`)
-        htmlInfo.push(`<input />`)
-        htmlInfo.push(`<span>금액</span>`)
-        htmlInfo.push(`<input />`)
+        htmlInfo.push(`<td><input type="checkbox" /></td>`)
+        htmlInfo.push(`<td><input class="meetingDate" type="date" /></td>`)
+        htmlInfo.push(`<td><input class="store" /></td>`)
+        htmlInfo.push(`<td><input class="description" /></td>`)
+        htmlInfo.push(`<td><input class="money" /></td>`)
+        htmlInfo.push(`<td><input class="amount" /></td>`)
 
         temp.innerHTML = htmlInfo.join('');
 

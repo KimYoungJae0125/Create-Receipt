@@ -21,3 +21,12 @@ thead td {
 td {
     padding: 10px;
 }
+
+tbody tr:nth-of-type(1) {
+    border-bottom: 1px dashed #ccc;
+}
+
+input {
+    border-radius: 5px;
+    height: 30px;
+}
